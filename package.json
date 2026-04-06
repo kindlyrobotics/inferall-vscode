@@ -15,7 +15,7 @@
 		"name": "InferAll Inc."
 	},
 	"license": "Apache-2.0",
-	"publisher": "kindlyrobotics",
+	"publisher": "kindly-robotics",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/inferall-ai/inferall-vscode"
