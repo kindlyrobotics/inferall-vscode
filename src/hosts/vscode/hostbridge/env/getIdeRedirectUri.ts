@@ -9,5 +9,5 @@ export async function getIdeRedirectUri(_: EmptyRequest): Promise<String> {
 		return { value: "" }
 	}
 	const uriScheme = vscode.env.uriScheme || "vscode"
-	return { value: `${uriScheme}://inferall.inferall-ai` }
+	return { value: `${uriScheme}://kindlyrobotics.inferall-ai` }
 }
