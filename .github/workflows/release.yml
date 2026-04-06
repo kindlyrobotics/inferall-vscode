@@ -1,0 +1,112 @@
+name: Extension Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: 'Publish to marketplaces'
+        required: true
+        default: 'true'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
+
+concurrency:
+  group: extension-release-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install root dependencies
+        run: npm ci
+
+      - name: Install webview dependencies
+        working-directory: webview-ui
+        run: npm ci
+
+      - name: Install CLI dependencies
+        working-directory: cli
+        run: npm ci
+
+      - name: Generate protos
+        run: npm run protos
+
+      - name: Build webview
+        run: npm run build:webview
+
+      - name: Build extension
+        run: node esbuild.mjs --production
+
+      - name: Package extension
+        run: npx @vscode/vsce package --allow-missing-repository
+
+      - name: Get extension version
+        id: version
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+          VSIX_PATH=$(ls *.vsix | head -1)
+          echo "VSIX_PATH=$VSIX_PATH" >> $GITHUB_OUTPUT
+
+      - name: Upload VSIX artifact
+        uses: actions/upload-artifact@v4
+        continue-on-error: true
+        with:
+          name: inferall-ai-${{ steps.version.outputs.VERSION }}
+          path: '*.vsix'
+          retention-days: 30
+
+      - name: Publish to VS Code Marketplace
+        if: startsWith(github.ref, 'refs/tags/') || github.event.inputs.publish == 'true'
+        run: npx @vscode/vsce publish --packagePath "${{ steps.version.outputs.VSIX_PATH }}"
+        env:
+          VSCE_PAT: ${{ secrets.VSCE_PAT }}
+
+      - name: Publish to Open VSX Registry
+        if: startsWith(github.ref, 'refs/tags/') || github.event.inputs.publish == 'true'
+        run: npx ovsx publish "${{ steps.version.outputs.VSIX_PATH }}"
+        env:
+          OVSX_PAT: ${{ secrets.OVSX_PAT }}
+        continue-on-error: true
+
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          name: InferAll AI v${{ steps.version.outputs.VERSION }}
+          draft: false
+          prerelease: false
+          files: ${{ steps.version.outputs.VSIX_PATH }}
+          body: |
+            ## InferAll AI VS Code Extension v${{ steps.version.outputs.VERSION }}
+
+            ### Installation
+
+            **VS Code Marketplace:** [Install from Marketplace](https://marketplace.visualstudio.com/items?itemName=kindly-robotics.inferall-ai)
+
+            **Manual:** Download the `.vsix` file and run:
+            ```bash
+            code --install-extension inferall-ai-${{ steps.version.outputs.VERSION }}.vsix
+            ```
+
+            ### Sign In
+            Click "Sign In" in the InferAll sidebar to connect your account. No API key needed.
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
