@@ -1,7 +1,7 @@
-# Beyond Autocomplete: True Agentic Planning
+# Sign In Once. Start Coding.
 
-**Cline analyzes your request, explores your code, and presents a clear plan.**
+**No API key. No separate billing. First 100k tokens are free.**
 
-Watch Cline break down complex tasks, ask clarifying questions, and outline its approach. Understand the 'why' before any code is written, ensuring changes align with your architecture and intent.
+InferAll handles the inference for you. Sign in to your InferAll account and the extension is ready — no keys to copy, no providers to configure. After the free tier, you have a single bill from a single vendor.
 
-![Cline planning demonstration](https://storage.googleapis.com/cline_public_images/docs/assets/cline-plan-hifi-1_compress.webp)
+![Agent planning demonstration](https://storage.googleapis.com/cline_public_images/docs/assets/cline-plan-hifi-1_compress.webp)

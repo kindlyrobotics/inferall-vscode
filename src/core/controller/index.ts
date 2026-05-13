@@ -742,6 +742,12 @@ export class Controller {
 
 	// InferAll
 
+	// TODO(inferall.auditLog.enabled): wire local audit-log writer for gateway requests.
+	// Scope: request metadata only (timestamp, model, token count, request id, status code).
+	// Never log prompt or response bodies. Setting is scaffolded in package.json
+	// contributes.configuration but is not yet read anywhere — see REBRAND_AUDIT.md
+	// section 5 for the implementation plan.
+
 	async handleInferallCallback(token: string, email: string | null, _state: string | null) {
 		const anthropic: ApiProvider = "anthropic"
 		const currentMode = this.stateManager.getGlobalSettingsKey("mode")
