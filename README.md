@@ -47,10 +47,12 @@ The full agentic feature set inherited from Cline:
 
 To contribute, start with [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
-## Upstream attribution
+## Acknowledgments
 
-InferAll is a fork of [Cline](https://github.com/cline/cline). The agentic engine, prompt engineering, MCP integration, and webview UI are upstream Cline's work, and the fork honors that lineage. We track upstream and pull improvements regularly. If your interest is the underlying agent (rather than the InferAll-included inference / single-vendor / audit-ready positioning), please use upstream Cline directly and support the original project.
+InferAll AI is a fork of [Cline](https://github.com/cline/cline) (© Cline Bot Inc., Apache License 2.0). The agentic engine, prompt engineering, MCP integration, and webview UI are upstream Cline's work, and this fork honors that lineage. We track upstream and pull improvements regularly. If your interest is the underlying agent (rather than the InferAll-included inference / single-vendor / audit-ready positioning), please use upstream Cline directly and support the original project.
+
+**InferAll Inc. is not affiliated with or endorsed by Cline Bot Inc.** See [`NOTICE`](./NOTICE) for the full attribution and modification notice.
 
 ## License
 
-[Apache 2.0](./LICENSE) — including the upstream Cline copyright. © Cline Bot Inc. (upstream) and Kindly Robotics Inc. (this fork).
+InferAll AI is distributed under the [Apache License 2.0](./LICENSE). Includes code © 2026 Cline Bot Inc. See [`LICENSE`](./LICENSE) and [`NOTICE`](./NOTICE).

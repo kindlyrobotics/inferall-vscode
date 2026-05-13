@@ -46,8 +46,8 @@ These are intentionally NOT touched in this PR because changing them breaks user
 - Comment controller `cline-ai-review`
 - Context keys `cline.isDevMode`, `cline.isGeneratingCommit`
 - Command `category` strings (`"Cline"`)
-- Walkthrough id `ClineWalkthrough`
-- All `cline.addToChat` titles ("Add to Cline")
+- ~~Walkthrough id `ClineWalkthrough`~~ (renamed to `InferAllWalkthrough` in step 1c — license compliance)
+- ~~All `cline.addToChat` titles ("Add to Cline")~~ (command **titles** rewritten in step 1c — license compliance; `command` ids and `category` strings remain deferred)
 
 ## 3. Walkthrough rewrite (FUTURE PR — step 3)
 
@@ -85,4 +85,6 @@ The setting `inferall.auditLog.enabled` is scaffolded in this PR with no impleme
 
 ## License/attribution check
 
-`LICENSE` is Apache-2.0. Apache-2.0 only requires that the license itself, copyright notices in source files, and any existing NOTICE file be preserved. The current `LICENSE` file is the unmodified Apache 2.0 text, and source-file headers continue to credit upstream. The bottom of the new `README.md` retains explicit Cline-fork attribution. **No additional NOTICE file is required**, but adding one is harmless if upstream adopts one later — track as future PR if needed.
+`LICENSE` is Apache-2.0. Apache-2.0 only requires that the license itself, copyright notices in source files, and any existing NOTICE file be preserved. The current `LICENSE` file is the unmodified Apache 2.0 text, and source-file headers continue to credit upstream. The bottom of the new `README.md` retains explicit Cline-fork attribution.
+
+**Step 1d update (license review, `kindlyrobotics/inferall.ai#9`):** A `NOTICE` file has been added at the repo root to satisfy Apache 2.0 §4(b) (modification notice), §4(d) (NOTICE inclusion if applicable), and §6 (no implied endorsement / no use of the licensor's marks). The README now carries a top-level "Acknowledgments" pointer to `NOTICE` and the License footer was rewritten to avoid implying that Cline Bot Inc. distributes this fork.
