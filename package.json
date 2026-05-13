@@ -171,12 +171,12 @@
 			},
 			{
 				"command": "cline.addToChat",
-				"title": "Add to Cline",
+				"title": "Add to InferAll",
 				"category": "Cline"
 			},
 			{
 				"command": "cline.addTerminalOutputToChat",
-				"title": "Add to Cline",
+				"title": "Add to InferAll",
 				"category": "Cline"
 			},
 			{
@@ -186,41 +186,41 @@
 			},
 			{
 				"command": "cline.generateGitCommitMessage",
-				"title": "Generate Commit Message with Cline",
+				"title": "Generate Commit Message with InferAll",
 				"category": "Cline",
 				"icon": "$(cline-icon)"
 			},
 			{
 				"command": "cline.abortGitCommitMessage",
-				"title": "Generate Commit Message with Cline - Stop",
+				"title": "Generate Commit Message with InferAll - Stop",
 				"category": "Cline",
 				"icon": "$(debug-stop)"
 			},
 			{
 				"command": "cline.explainCode",
-				"title": "Explain with Cline",
+				"title": "Explain with InferAll",
 				"category": "Cline"
 			},
 			{
 				"command": "cline.improveCode",
-				"title": "Improve with Cline",
+				"title": "Improve with InferAll",
 				"category": "Cline"
 			},
 			{
 				"command": "cline.jupyterGenerateCell",
-				"title": "Generate Jupyter Cell with Cline",
+				"title": "Generate Jupyter Cell with InferAll",
 				"category": "Cline",
 				"icon": "$(sparkle)"
 			},
 			{
 				"command": "cline.jupyterExplainCell",
-				"title": "Explain Jupyter Cell with Cline",
+				"title": "Explain Jupyter Cell with InferAll",
 				"category": "Cline",
 				"icon": "$(question)"
 			},
 			{
 				"command": "cline.jupyterImproveCell",
-				"title": "Improve Jupyter Cell with Cline",
+				"title": "Improve Jupyter Cell with InferAll",
 				"category": "Cline",
 				"icon": "$(lightbulb)"
 			},
@@ -242,7 +242,7 @@
 			},
 			{
 				"command": "cline.reviewComment.addToChat",
-				"title": "Add to Cline Chat",
+				"title": "Add to InferAll Chat",
 				"category": "Cline",
 				"icon": "$(link-external)"
 			}
