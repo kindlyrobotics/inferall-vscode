@@ -55,14 +55,14 @@
 			"cline-icon": {
 				"description": "cline",
 				"default": {
-					"fontPath": "assets/icons/cline-bot.woff",
+					"fontPath": "assets/icons/inferall.woff",
 					"fontCharacter": "\\e900"
 				}
 			}
 		},
 		"walkthroughs": [
 			{
-				"id": "ClineWalkthrough",
+				"id": "InferAllWalkthrough",
 				"title": "Get started with InferAll",
 				"description": "Cline-based agent with free inference built in. Anthropic-compatible, zero setup. Here are 5 ways to put it to work:",
 				"steps": [

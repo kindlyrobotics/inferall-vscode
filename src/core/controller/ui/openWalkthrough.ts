@@ -14,7 +14,10 @@ import type { Controller } from "../index"
  */
 export async function openWalkthrough(_controller: Controller, _request: EmptyRequest): Promise<Empty> {
 	try {
-		await vscode.commands.executeCommand("workbench.action.openWalkthrough", `${ExtensionRegistryInfo.id}#ClineWalkthrough`)
+		await vscode.commands.executeCommand(
+			"workbench.action.openWalkthrough",
+			`${ExtensionRegistryInfo.id}#InferAllWalkthrough`,
+		)
 		telemetryService.captureButtonClick("webview_openWalkthrough")
 		return Empty.create({})
 	} catch (error) {
