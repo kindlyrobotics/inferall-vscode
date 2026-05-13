@@ -1,7 +1,7 @@
 {
 	"name": "inferall-ai",
 	"displayName": "InferAll AI",
-	"description": "AI coding agent powered by InferAll — autonomous file editing, terminal commands, browser use, and more. Sign in once, code with any model.",
+	"description": "Cline with free inference built in. Anthropic-compatible, zero setup, first 100k tokens free. Designed for developers in environments where AI procurement is hard.",
 	"version": "0.1.0",
 	"icon": "assets/icons/icon.png",
 	"workspaces": [
@@ -63,29 +63,29 @@
 		"walkthroughs": [
 			{
 				"id": "ClineWalkthrough",
-				"title": "Meet Cline, your new coding partner",
-				"description": "Cline codes like a developer because it thinks like one. Here are 5 ways to put it to work:",
+				"title": "Get started with InferAll",
+				"description": "Cline-based agent with free inference built in. Anthropic-compatible, zero setup. Here are 5 ways to put it to work:",
 				"steps": [
 					{
 						"id": "welcome",
-						"title": "Start with a Goal, Not Just a Prompt",
-						"description": "Tell Cline what you want to achieve. It plans, asks, and then codes, like a true partner.",
+						"title": "Sign In Once. No API Key Required.",
+						"description": "Sign in to InferAll and your first 100k tokens are on the house. No keys to manage, no separate billing relationships.",
 						"media": {
 							"markdown": "walkthrough/step1.md"
 						}
 					},
 					{
 						"id": "learn",
-						"title": "Let Cline Learn Your Codebase",
-						"description": "Point Cline to your project. It builds understanding to make smart, context-aware changes.",
+						"title": "Let the Agent Learn Your Codebase",
+						"description": "Point the agent at your project. It builds understanding to make smart, context-aware changes.",
 						"media": {
 							"markdown": "walkthrough/step2.md"
 						}
 					},
 					{
 						"id": "advanced-features",
-						"title": "Always Use the Best AI Models",
-						"description": "Cline empowers you with State-of-the-Art AI, connecting to top models (Anthropic, Gemini, OpenAI & more).",
+						"title": "Anthropic-Compatible. Works With Approved Stacks.",
+						"description": "InferAll speaks Anthropic's API format, so it slots into tooling chains that have already approved Claude — without adding new vendors.",
 						"media": {
 							"markdown": "walkthrough/step3.md"
 						}
@@ -101,7 +101,7 @@
 					{
 						"id": "getting-started",
 						"title": "You're Always in Control",
-						"description": "Review Cline's plans and diffs. Approve changes before they happen. No surprises.",
+						"description": "Review the agent's plans and diffs. Approve changes before they happen. Single endpoint, single vendor, auditable from day one.",
 						"media": {
 							"markdown": "walkthrough/step5.md"
 						},
@@ -116,7 +116,7 @@
 			"activitybar": [
 				{
 					"id": "claude-dev-ActivityBar",
-					"title": "Cline",
+					"title": "InferAll",
 					"icon": "assets/icons/icon.svg"
 				}
 			]
@@ -376,8 +376,15 @@
 			]
 		},
 		"configuration": {
-			"title": "Cline",
-			"properties": {}
+			"title": "InferAll",
+			"properties": {
+				"inferall.auditLog.enabled": {
+					"type": "boolean",
+					"default": false,
+					"description": "Enable local audit logging of InferAll gateway requests (request metadata only — never prompt or response bodies). Scaffold setting; writer implementation is pending. See REBRAND_AUDIT.md.",
+					"scope": "machine-overridable"
+				}
+			}
 		}
 	},
 	"scripts": {
