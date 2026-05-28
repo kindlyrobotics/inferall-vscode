@@ -50,7 +50,7 @@ jobs:
       tarball: ${{ steps.pack.outputs.tarball }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           ref: ${{ inputs.ref || github.ref }}
           persist-credentials: false
@@ -63,7 +63,7 @@ jobs:
           echo "Building from commit: $COMMIT_SHA"
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: "20.x"
 

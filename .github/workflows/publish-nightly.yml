@@ -23,7 +23,7 @@ jobs:
         environment: PublishNightly
 
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v5
               with:
                   lfs: true
 
@@ -36,7 +36,7 @@ jobs:
                 echo "Found recent commits, proceeding with build"
                 
             - name: Setup Node.js
-              uses: actions/setup-node@v4
+              uses: actions/setup-node@v5
               with:
                   # Keep publish environment aligned with test workflow/tooling lockfile expectations.
                   # Newer LTS (Node 24 / npm 11) can make `npm list` fail with ELSPROBLEMS during vsce packaging.
