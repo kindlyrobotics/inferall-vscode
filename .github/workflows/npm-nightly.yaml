@@ -27,7 +27,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Check for recent commits
         id: check_commits
@@ -48,7 +48,7 @@ jobs:
 
       - name: Setup Node.js
         if: steps.check_commits.outputs.skip != 'true'
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: "24.x"
           registry-url: "https://registry.npmjs.org"

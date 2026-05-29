@@ -22,10 +22,10 @@ jobs:
         name: Quality Checks
         steps:
             - name: Checkout code
-              uses: actions/checkout@v4
+              uses: actions/checkout@v5
 
             - name: Setup Node.js environment
-              uses: actions/setup-node@v4
+              uses: actions/setup-node@v5
               with:
                   node-version: 22
                   cache: 'npm'
@@ -57,10 +57,10 @@ jobs:
                 shell: bash
         steps:
             - name: Checkout code
-              uses: actions/checkout@v4
+              uses: actions/checkout@v5
 
             - name: Setup Node.js environment
-              uses: actions/setup-node@v4
+              uses: actions/setup-node@v5
               with:
                   node-version: 22
                   cache: 'npm'
@@ -135,10 +135,10 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: Checkout code
-              uses: actions/checkout@v4
+              uses: actions/checkout@v5
 
             - name: Setup Node.js environment
-              uses: actions/setup-node@v4
+              uses: actions/setup-node@v5
               with:
                   node-version: 22
                   cache: 'npm'
@@ -180,7 +180,7 @@ jobs:
         # Run on PRs to main, pushes to main, and manual dispatches
         steps:
             - name: Checkout code
-              uses: actions/checkout@v4
+              uses: actions/checkout@v5
 
             - name: Download unit tests coverage reports
               uses: actions/download-artifact@v4
