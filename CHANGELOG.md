@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.1.0] — InferAll fork
+### Added
+- InferAll AI branding: `displayName: InferAll AI`, `publisher: kindly-robotics`, `version: 0.1.0`
+- Non-affiliation disclaimer: this extension is not affiliated with or endorsed by Cline / Anthropic
+- Apache-2.0 `LICENSE`, `NOTICE`, and `REBRAND_AUDIT.md` included in distribution
+- Security and Code of Conduct reporting redirected to InferAll channels
+- Marketing page: https://inferall.ai/extension
+
+### Upstream base
+Built on the open-source [Cline](https://github.com/cline/cline) extension (Apache-2.0). See upstream changelog below.
+
+---
+
 ## [3.77.0]
 
 ### Added
