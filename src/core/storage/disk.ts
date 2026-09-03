@@ -69,10 +69,35 @@ export const GlobalFileNames = {
 	remoteConfig: (orgId: string) => `remote_config_${orgId}.json`,
 }
 
+/**
+ * Injection seam for tests. `getDocumentsPath()` spawns a subprocess — PowerShell
+ * on win32, xdg-user-dir on linux — and that is reached from `getAllHooksDirs()`
+ * via `getGlobalHooksDir` -> `ensureHooksDirectoryExists`, so unit tests about
+ * which directories are returned were shelling out. PowerShell cold start on
+ * windows-latest intermittently exceeded mocha's 2000ms default and then a
+ * 15000ms ceiling (runs 33757745690, 33770570834).
+ *
+ * ⛔ The seam has to be HERE, because stubbing the module does not work and fails
+ *   in two different ways, both measured 2026-09-03:
+ *   - `sinon.stub(execaWrapper, "execa")` is a SILENT NO-OP. `@packages/execa` is
+ *     `export { execa } from "execa"`, which TypeScript compiles to a
+ *     non-configurable getter; sinon reports success and replaces nothing, so the
+ *     test passes on macOS via the error branch while Windows still spawns.
+ *   - `sinon.stub(realExeca, "execa")` THROWS "descriptor ... is non-configurable".
+ *
+ * Mirrors `setNotificationExecaForTesting` in integrations/notifications.
+ */
+type ExecaFn = typeof execa
+let execaImpl: ExecaFn = execa
+
+export function setDiskExecaForTesting(mock: ExecaFn | null): void {
+	execaImpl = mock ?? execa
+}
+
 export async function getDocumentsPath(): Promise<string> {
 	if (process.platform === "win32") {
 		try {
-			const { stdout: docsPath } = await execa("powershell", [
+			const { stdout: docsPath } = await execaImpl("powershell", [
 				"-NoProfile", // Ignore user's PowerShell profile(s)
 				"-Command",
 				"[System.Environment]::GetFolderPath([System.Environment+SpecialFolder]::MyDocuments)",
@@ -87,10 +112,10 @@ export async function getDocumentsPath(): Promise<string> {
 	} else if (process.platform === "linux") {
 		try {
 			// First check if xdg-user-dir exists
-			await execa("which", ["xdg-user-dir"])
+			await execaImpl("which", ["xdg-user-dir"])
 
 			// If it exists, try to get XDG documents path
-			const { stdout } = await execa("xdg-user-dir", ["DOCUMENTS"])
+			const { stdout } = await execaImpl("xdg-user-dir", ["DOCUMENTS"])
 			const trimmedPath = stdout.trim()
 			if (trimmedPath) {
 				return trimmedPath

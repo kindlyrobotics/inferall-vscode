@@ -11,37 +11,42 @@ import { setVscodeHostProviderMock } from "@/test/host-provider-test-utils"
 import {
 	ensureStateDirectoryExists,
 	getAllHooksDirs,
+	getDocumentsPath,
 	getTaskHistoryStateFilePath,
 	getWorkspaceHooksDirs,
 	readTaskHistoryFromState,
+	setDiskExecaForTesting,
 	setRuntimeHooksDir,
 	writeTaskHistoryToState,
 } from "../disk"
 import { StateManager } from "../StateManager"
 
-describe("disk - hooks functionality", function () {
-	// Every test here creates a real temp directory and mkdir's into it. On Windows
-	// CI that occasionally exceeds mocha's 2000ms default, and the suite then fails
-	// with "Timeout of 2000ms exceeded" rather than an assertion.
-	//
-	// Measured 2026-09-03: `getAllHooksDirs` timed out twice on windows-latest for a
-	// commit whose CONTENT had passed windows-latest 45 minutes earlier on the branch
-	// it was merged from. Same code, both outcomes, so it is environment latency and
-	// not a logic failure. The work itself is bounded — three awaits with
-	// `isDirectory` stubbed — so raising the ceiling cannot hide a hang.
-	this.timeout(15_000)
-
+describe("disk - hooks functionality", () => {
 	let sandbox: sinon.SinonSandbox
 	let tempDir: string
+	let execaSpy: sinon.SinonStub
 
 	beforeEach(async () => {
 		sandbox = sinon.createSandbox()
 		tempDir = path.join(os.tmpdir(), `disk-test-${Date.now()}-${Math.random().toString(36).slice(2)}`)
 		await fs.mkdir(tempDir, { recursive: true })
+
+		// getDocumentsPath() SPAWNS A SUBPROCESS: PowerShell on win32, xdg-user-dir on
+		// linux. getAllHooksDirs -> getGlobalHooksDir -> ensureHooksDirectoryExists ->
+		// getDocumentsPath, so a unit test about which directories are returned was
+		// shelling out. PowerShell cold start on windows-latest intermittently exceeded
+		// mocha's 2000ms default AND a 15000ms ceiling (runs 33757745690, 33770570834).
+		//
+		// Resolving with empty stdout makes getDocumentsPath fall through to its
+		// documented default, path.join(os.homedir(), "Documents"), without taking the
+		// error branch. Tests that stub os.homedir are then fully hermetic.
+		execaSpy = sandbox.stub().resolves({ stdout: "" })
+		setDiskExecaForTesting(execaSpy as never)
 	})
 
 	afterEach(async () => {
 		sandbox.restore()
+		setDiskExecaForTesting(null)
 		setRuntimeHooksDir(undefined)
 		try {
 			await fs.rm(tempDir, { recursive: true, force: true })
@@ -211,6 +216,32 @@ describe("disk - hooks functionality", function () {
 			result.should.be.an.Array()
 			result.length.should.equal(1)
 			result[0].should.equal(hooksDir)
+		})
+	})
+
+	describe("getDocumentsPath", () => {
+		// This is the regression guard for the subprocess above. It runs on every
+		// platform: process.platform is forced to "win32" so the branch that spawns
+		// PowerShell is taken deliberately, which is the only way to prove on macOS
+		// that the beforeEach stub actually intercepts disk.ts's execa call.
+		it("takes the win32 branch through the stub, never a real subprocess", async () => {
+			const original = process.platform
+			Object.defineProperty(process, "platform", { value: "win32", configurable: true })
+			try {
+				sandbox.stub(os, "homedir").returns(tempDir)
+
+				const result = await getDocumentsPath()
+
+				// Empty stdout means it fell through to the documented default.
+				result.should.equal(path.join(tempDir, "Documents"))
+
+				// And it got there via our stub: if this assertion ever fails, disk.ts is
+				// reaching a real `execa` and Windows CI will hang again.
+				execaSpy.calledOnce.should.be.true()
+				execaSpy.firstCall.args[0].should.equal("powershell")
+			} finally {
+				Object.defineProperty(process, "platform", { value: original, configurable: true })
+			}
 		})
 	})
 
