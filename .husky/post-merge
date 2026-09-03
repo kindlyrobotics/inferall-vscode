@@ -1,0 +1,23 @@
+# Touch the seat heartbeat when a pull brings work in. See README.md in this dir.
+#
+# WHY THIS EXISTS (2026-09-03, the fifth alarm-adjacent finding in one day):
+# post-commit alone measures LOCAL commits. It does not fire when a PR is merged
+# on GitHub and then pulled — so an hour spent merging, arguably the most
+# productive hour, was invisible to the heartbeat BY CONSTRUCTION. Measured: my
+# beat sat at 13:27Z through 94 minutes of merging three PRs, pinning three
+# issues and posting five comments, and the orchestrator opened a fleet-wide
+# shared-cause investigation partly on my seat's silence.
+#
+# Yesterday's fix widened the population from 2 repos to 4. It did NOT widen it
+# from "local commits" to "work". This closes the specific, common gap: a merge
+# arriving by pull is real upstream work and cannot be faked by a timer, which
+# is the property that made post-commit acceptable in the first place.
+#
+# ⚠️ STILL NOT COMPLETE. Reading, measuring, querying an API and posting a
+#   comment produce neither a commit nor a merge, and will still age the beat
+#   honestly. That remains correct behaviour, not a bug to paper over.
+# ⛔ Never let this fail a pull: the heartbeat is telemetry, the merge is work.
+# Guarded so it is a silent no-op on any machine without the infra checkout.
+HEARTBEAT=/Users/taylormohney/Documents/code/KindlyRobotics/infra/scripts/tick-heartbeat.mjs
+[ -f "$HEARTBEAT" ] && node "$HEARTBEAT" >/dev/null 2>&1
+exit 0
