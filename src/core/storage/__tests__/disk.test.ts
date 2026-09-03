@@ -19,7 +19,18 @@ import {
 } from "../disk"
 import { StateManager } from "../StateManager"
 
-describe("disk - hooks functionality", () => {
+describe("disk - hooks functionality", function () {
+	// Every test here creates a real temp directory and mkdir's into it. On Windows
+	// CI that occasionally exceeds mocha's 2000ms default, and the suite then fails
+	// with "Timeout of 2000ms exceeded" rather than an assertion.
+	//
+	// Measured 2026-09-03: `getAllHooksDirs` timed out twice on windows-latest for a
+	// commit whose CONTENT had passed windows-latest 45 minutes earlier on the branch
+	// it was merged from. Same code, both outcomes, so it is environment latency and
+	// not a logic failure. The work itself is bounded — three awaits with
+	// `isDirectory` stubbed — so raising the ceiling cannot hide a hang.
+	this.timeout(15_000)
+
 	let sandbox: sinon.SinonSandbox
 	let tempDir: string
 
