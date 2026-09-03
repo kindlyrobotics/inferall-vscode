@@ -12,6 +12,7 @@ import type { ApiProvider, ModelInfo } from "@shared/api"
 import type { ChatContent } from "@shared/ChatContent"
 import type { ExtensionState, Platform } from "@shared/ExtensionMessage"
 import type { HistoryItem } from "@shared/HistoryItem"
+import { buildInferallApiConfiguration } from "@shared/inferall"
 import type { McpMarketplaceCatalog, McpMarketplaceItem } from "@shared/mcp"
 import { type Settings } from "@shared/storage/state-keys"
 import type { Mode } from "@shared/storage/types"
@@ -749,17 +750,12 @@ export class Controller {
 	// section 5 for the implementation plan.
 
 	async handleInferallCallback(token: string, email: string | null, _state: string | null) {
-		const anthropic: ApiProvider = "anthropic"
+		// The OpenAI-compatible provider, not "anthropic": AnthropicHandler.getModel()
+		// discards any apiModelId that is not one of its 13 bare "claude-*" ids, and
+		// the gateway refuses all 13. See shared/inferall.ts for the measurement.
 		const currentMode = this.stateManager.getGlobalSettingsKey("mode")
 		const currentApiConfiguration = this.stateManager.getApiConfiguration()
-		const updatedConfig = {
-			...currentApiConfiguration,
-			planModeApiProvider: anthropic,
-			actModeApiProvider: anthropic,
-			apiProvider: anthropic,
-			anthropicApiKey: token,
-			anthropicBaseUrl: "https://api.inferall.ai",
-		}
+		const updatedConfig = buildInferallApiConfiguration(currentApiConfiguration, token)
 		this.stateManager.setApiConfiguration(updatedConfig)
 
 		// Store email for display
