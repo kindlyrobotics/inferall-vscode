@@ -1,0 +1,12 @@
+# Touch the seat heartbeat on every commit. Reasoning: infra/scripts/hooks/README.md
+#
+# ⛔ THIS REPO SETS core.hooksPath=.husky/_, so .git/hooks/post-commit is NEVER
+#   executed here. On 2026-09-03 the hook was symlinked into .git/hooks in all
+#   four repos and the heartbeat still did not move on a commit to this one —
+#   installed, and inert, which reads as covered. Husky repos need the hook HERE.
+#
+# Guarded so it is a silent no-op on any machine without the infra checkout, and
+# never fails a commit: the heartbeat is telemetry, the commit is the work.
+HEARTBEAT=/Users/taylormohney/Documents/code/KindlyRobotics/infra/scripts/tick-heartbeat.mjs
+[ -f "$HEARTBEAT" ] && node "$HEARTBEAT" >/dev/null 2>&1
+exit 0
