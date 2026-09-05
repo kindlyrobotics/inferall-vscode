@@ -6,12 +6,16 @@ import sinon from "sinon"
 import { HookOutput } from "../../../shared/proto/cline/hooks"
 import { HookFactory } from "../hook-factory"
 import { createHookTestEnv, HookTestEnv, stubHookDirs, withFixtureRunner, writeHookScriptForPlatform } from "./test-utils"
+import { applyWindowsHookTimeout } from "./windows-hook-timeout"
 
 describe("TaskResume Hook", () => {
+	beforeEach(function () {
+		applyWindowsHookTimeout(this)
+	})
+
 	let tempDir: string
 	let sandbox: sinon.SinonSandbox
 	let hookTestEnv: HookTestEnv
-	const WINDOWS_HOOK_TEST_TIMEOUT_MS = 15000
 
 	type FixtureScenario = {
 		fixtureName: string
@@ -111,11 +115,7 @@ console.log(JSON.stringify({
 	})
 
 	describe("Time-Based Calculations", () => {
-		it("should correctly calculate minutes ago for recent resumes", async function () {
-			if (process.platform === "win32") {
-				this.timeout(WINDOWS_HOOK_TEST_TIMEOUT_MS)
-			}
-
+		it("should correctly calculate minutes ago for recent resumes", async () => {
 			const hookPath = path.join(tempDir, ".clinerules", "hooks", "TaskResume")
 			const hookScript = `#!/usr/bin/env node
 const input = JSON.parse(require('fs').readFileSync(0, 'utf-8'));
@@ -157,11 +157,7 @@ console.log(JSON.stringify({
 			}
 		})
 
-		it("should handle very old timestamps (days ago)", async function () {
-			if (process.platform === "win32") {
-				this.timeout(WINDOWS_HOOK_TEST_TIMEOUT_MS)
-			}
-
+		it("should handle very old timestamps (days ago)", async () => {
 			const hookPath = path.join(tempDir, ".clinerules", "hooks", "TaskResume")
 			const hookScript = `#!/usr/bin/env node
 const input = JSON.parse(require('fs').readFileSync(0, 'utf-8'));
@@ -230,11 +226,7 @@ console.log(JSON.stringify({
 	})
 
 	describe("Message Count Analysis", () => {
-		it("should analyze message count thresholds", async function () {
-			if (process.platform === "win32") {
-				this.timeout(WINDOWS_HOOK_TEST_TIMEOUT_MS)
-			}
-
+		it("should analyze message count thresholds", async () => {
 			const hookPath = path.join(tempDir, ".clinerules", "hooks", "TaskResume")
 			const hookScript = `#!/usr/bin/env node
 const input = JSON.parse(require('fs').readFileSync(0, 'utf-8'));
@@ -552,11 +544,7 @@ console.log(JSON.stringify({
 	})
 
 	describe("Fixture-Based Tests", () => {
-		it("should validate representative fixtures end-to-end", async function () {
-			if (process.platform === "win32") {
-				this.timeout(WINDOWS_HOOK_TEST_TIMEOUT_MS)
-			}
-
+		it("should validate representative fixtures end-to-end", async () => {
 			const scenarios: FixtureScenario[] = [
 				{
 					fixtureName: "success",

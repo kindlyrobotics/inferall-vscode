@@ -6,12 +6,16 @@ import sinon from "sinon"
 import { HookOutput } from "../../../shared/proto/cline/hooks"
 import { HookFactory } from "../hook-factory"
 import { createHookTestEnv, HookTestEnv, stubHookDirs, withFixtureRunner, writeHookScriptForPlatform } from "./test-utils"
+import { applyWindowsHookTimeout } from "./windows-hook-timeout"
 
 describe("UserPromptSubmit Hook", () => {
+	beforeEach(function () {
+		applyWindowsHookTimeout(this)
+	})
+
 	let tempDir: string
 	let sandbox: sinon.SinonSandbox
 	let hookTestEnv: HookTestEnv
-	const WINDOWS_HOOK_TEST_TIMEOUT_MS = 15000
 
 	type FixtureScenario = {
 		fixtureName: string
@@ -36,9 +40,7 @@ describe("UserPromptSubmit Hook", () => {
 	})
 
 	describe("Hook Input Format", () => {
-		it("should receive prompt text from user content", async function () {
-			this.timeout(5000)
-
+		it("should receive prompt text from user content", async () => {
 			const hookPath = path.join(tempDir, ".clinerules", "hooks", "UserPromptSubmit")
 			const hookScript = `#!/usr/bin/env node
 const input = JSON.parse(require('fs').readFileSync(0, 'utf-8'));
@@ -368,13 +370,10 @@ console.log(JSON.stringify({
 	describe("Fixture-Based Tests", () => {
 		// These tests demonstrate using pre-written fixtures from the fixtures directory
 		// Fixtures serve as both test data and examples for manual testing
+
 		const isWindows = process.platform === "win32"
 
-		it("should validate representative fixtures end-to-end", async function () {
-			if (isWindows) {
-				this.timeout(WINDOWS_HOOK_TEST_TIMEOUT_MS)
-			}
-
+		it("should validate representative fixtures end-to-end", async () => {
 			const scenarios: FixtureScenario[] = [
 				{
 					fixtureName: "success",

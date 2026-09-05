@@ -2,6 +2,7 @@ import { afterEach, beforeEach, describe, it } from "mocha"
 import "should"
 import { getHookLaunchConfig, resetHookLaunchConfigCacheForTesting } from "../HookProcess"
 import { withPlatform } from "./test-utils"
+import { applyWindowsHookTimeout } from "./windows-hook-timeout"
 
 function createDeferred<T>() {
 	let resolve!: (value: T | PromiseLike<T>) => void
@@ -15,6 +16,10 @@ function createDeferred<T>() {
 }
 
 describe("HookProcess", () => {
+	beforeEach(function () {
+		applyWindowsHookTimeout(this)
+	})
+
 	beforeEach(() => {
 		resetHookLaunchConfigCacheForTesting()
 	})
