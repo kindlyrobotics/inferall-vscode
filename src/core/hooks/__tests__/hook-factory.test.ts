@@ -16,8 +16,6 @@ describe("Hook System", () => {
 	let tempDir: string
 	let sandbox: sinon.SinonSandbox
 	let hookTestEnv: HookTestEnv
-	const WINDOWS_HOOK_TEST_TIMEOUT_MS = 15000
-	const WINDOWS_TEST_TIMEOUT_MS = 10000
 
 	// Helper to write executable hook script
 	const writeHookScript = async (hookPath: string, nodeScript: string): Promise<void> => {
@@ -29,12 +27,6 @@ describe("Hook System", () => {
 		hookTestEnv = await createHookTestEnv()
 		tempDir = hookTestEnv.tempDir
 		sandbox = hookTestEnv.sandbox
-	})
-
-	beforeEach(function () {
-		if (process.platform === "win32") {
-			this.timeout(WINDOWS_TEST_TIMEOUT_MS)
-		}
 	})
 
 	afterEach(async () => {
@@ -60,11 +52,7 @@ describe("Hook System", () => {
 	})
 
 	describe("StdioHookRunner", () => {
-		it("should execute workspace hook from its respective workspace root directory", async function () {
-			if (process.platform === "win32") {
-				this.timeout(WINDOWS_HOOK_TEST_TIMEOUT_MS)
-			}
-
+		it("should execute workspace hook from its respective workspace root directory", async () => {
 			// Create a test hook script that outputs the current working directory
 			const hookPath = path.join(tempDir, ".clinerules", "hooks", "PreToolUse")
 			const hookScript = `#!/usr/bin/env node
