@@ -6,8 +6,13 @@ import sinon from "sinon"
 import { HookOutput } from "../../../shared/proto/cline/hooks"
 import { HookFactory } from "../hook-factory"
 import { createHookTestEnv, HookTestEnv, stubHookDirs, withFixtureRunner, writeHookScriptForPlatform } from "./test-utils"
+import { applyWindowsHookTimeout } from "./windows-hook-timeout"
 
 describe("TaskResume Hook", () => {
+	beforeEach(function () {
+		applyWindowsHookTimeout(this)
+	})
+
 	let tempDir: string
 	let sandbox: sinon.SinonSandbox
 	let hookTestEnv: HookTestEnv

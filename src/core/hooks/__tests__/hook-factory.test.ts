@@ -6,8 +6,13 @@ import sinon from "sinon"
 import { setDistinctId } from "@/services/logging/distinctId"
 import { HookFactory } from "../hook-factory"
 import { createHookTestEnv, HookTestEnv, stubHookDirs, withPlatform, writeHookScriptForPlatform } from "./test-utils"
+import { applyWindowsHookTimeout } from "./windows-hook-timeout"
 
 describe("Hook System", () => {
+	beforeEach(function () {
+		applyWindowsHookTimeout(this)
+	})
+
 	let tempDir: string
 	let sandbox: sinon.SinonSandbox
 	let hookTestEnv: HookTestEnv
