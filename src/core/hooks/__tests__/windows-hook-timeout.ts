@@ -41,11 +41,26 @@ export const WINDOWS_HOOK_TIMEOUT_MS = 30_000
  *   a Mocha context there. That is also why the original guards ended up
  *   per-test — each `it()` had to be converted to `function ()` to reach `this`.
  *   A `beforeEach(function () {...})` gets the context without restructuring the
- *   suite, and still covers every test in it, including ones added later.
+ *   suite and, via `currentTest`, covers every test in it including ones added later.
  */
 export function applyWindowsHookTimeout(ctx: Mocha.Context): void {
 	if (process.platform !== "win32") {
 		return
 	}
-	ctx.timeout(WINDOWS_HOOK_TIMEOUT_MS)
+	/* ⛔ `ctx.timeout()` INSIDE A beforeEach SETS THE HOOK'S TIMEOUT, NOT THE
+	 *   TEST'S. My first version did exactly that and CI proved it: three tests
+	 *   failed at "Timeout of 2000ms" -- the default -- in files this helper was
+	 *   already wired into. Worse than doing nothing, because the per-test guards
+	 *   it replaced were being removed at the same time.
+	 *
+	 * ⭐ MEASURED RATHER THAN REASONED, after asserting it twice without testing:
+	 *
+	 *     beforeEach + this.timeout(9000)              -> test timeout 2000
+	 *     beforeEach + this.currentTest.timeout(9000)  -> test timeout 9000
+	 *     describe(function(){ this.timeout(9000) })   -> test timeout 9000
+	 *
+	 *   `currentTest` is used over the suite form because every top-level
+	 *   `describe` here is an arrow function, so the suite form would require
+	 *   restructuring seven files. */
+	ctx.currentTest?.timeout(WINDOWS_HOOK_TIMEOUT_MS)
 }
